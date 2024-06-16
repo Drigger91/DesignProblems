@@ -10,9 +10,9 @@ class LRUCache {
     /**
      * The type Dll.
      */
-    private final Map<Integer, DoublyLinkedList> map;
-    private final DoublyLinkedList head;
-    private final DoublyLinkedList tail;
+    private final Map<Integer, DoublyLinkedListNode> map;
+    private final DoublyLinkedListNode head;
+    private final DoublyLinkedListNode tail;
     private final int capacity;
 
     /**
@@ -23,8 +23,8 @@ class LRUCache {
     public LRUCache(int capacity) {
         this.map = new HashMap<>();
         this.capacity = capacity;
-        this.head = new DoublyLinkedList(0, 0);
-        this.tail = new DoublyLinkedList(0, 0);
+        this.head = new DoublyLinkedListNode(0, 0);
+        this.tail = new DoublyLinkedListNode(0, 0);
         this.head.next = this.tail;
         this.tail.prev = this.head;
     }
@@ -46,9 +46,9 @@ class LRUCache {
      * takes the integer key, and update it's position in LRU
      */
     private int updateLru(int key) {
-        DoublyLinkedList node = map.get(key);
-        DoublyLinkedList previous = node.prev;
-        DoublyLinkedList next = node.next;
+        DoublyLinkedListNode node = map.get(key);
+        DoublyLinkedListNode previous = node.prev;
+        DoublyLinkedListNode next = node.next;
         previous.next = next;
         next.prev = previous;
         insertNodeInLRU(node);
@@ -64,22 +64,22 @@ class LRUCache {
         if (map.size() == capacity && !map.containsKey(key)) {
             deleteLRUNode();
         }
-        DoublyLinkedList node;
+        DoublyLinkedListNode node;
         if (map.containsKey(key)) {
-            DoublyLinkedList currentNode = map.get(key);
+            DoublyLinkedListNode currentNode = map.get(key);
             currentNode.val = value;
             node = currentNode;
             deleteNode(key);
         } else {
-            node = new DoublyLinkedList(key, value);
+            node = new DoublyLinkedListNode(key, value);
         }
         map.put(key, node);
         insertNodeInLRU(node);
     }
     private void deleteNode(int key) {
-        DoublyLinkedList nodeToDelete = map.get(key);
-        DoublyLinkedList next = nodeToDelete.next;
-        DoublyLinkedList prev = nodeToDelete.prev;
+        DoublyLinkedListNode nodeToDelete = map.get(key);
+        DoublyLinkedListNode next = nodeToDelete.next;
+        DoublyLinkedListNode prev = nodeToDelete.prev;
         prev.next = next;
         next.prev = prev;
     }
@@ -88,8 +88,8 @@ class LRUCache {
      * delete the LRU node and make head point to nextLru, tail can also be nextLRU;
      */
     private void deleteLRUNode() {
-        DoublyLinkedList lruNode = head.next;
-        DoublyLinkedList nextLruNode = lruNode.next;
+        DoublyLinkedListNode lruNode = head.next;
+        DoublyLinkedListNode nextLruNode = lruNode.next;
         head.next = nextLruNode;
         nextLruNode.prev = head;
         map.remove(lruNode.key);
@@ -97,8 +97,8 @@ class LRUCache {
     /**
      * insert node prev to tail.
     */
-    private void insertNodeInLRU(DoublyLinkedList node) {
-        DoublyLinkedList previousNode = this.tail.prev;
+    private void insertNodeInLRU(DoublyLinkedListNode node) {
+        DoublyLinkedListNode previousNode = this.tail.prev;
         previousNode.next = node;
         node.prev = previousNode;
         node.next = this.tail;
@@ -106,7 +106,7 @@ class LRUCache {
         print();
     }
     public void print() {
-        DoublyLinkedList node = head;
+        DoublyLinkedListNode node = head;
         while (node != null) {
             System.out.print("[ " + node.key + "," + node.val + "] " + "->");
             node = node.next;

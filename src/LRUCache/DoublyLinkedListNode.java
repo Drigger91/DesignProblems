@@ -1,8 +1,8 @@
 package LRUCache;
 
-public class DoublyLinkedList {
-    DoublyLinkedList prev;
-    DoublyLinkedList next;
+public class DoublyLinkedListNode {
+    DoublyLinkedListNode prev;
+    DoublyLinkedListNode next;
     int key;
     int val;
 
@@ -12,7 +12,7 @@ public class DoublyLinkedList {
      * @param key the key
      * @param val the val
      */
-    public DoublyLinkedList(int key, int val) {
+    public DoublyLinkedListNode(int key, int val) {
         this.key = key;
         this.val = val;
         this.prev = null;
