@@ -7,9 +7,6 @@ import java.util.Map;
  * The type Lru cache.
  */
 class LRUCache {
-    /**
-     * The type Dll.
-     */
     private final Map<Integer, DoublyLinkedListNode> map;
     private final DoublyLinkedListNode head;
     private final DoublyLinkedListNode tail;
@@ -30,7 +27,7 @@ class LRUCache {
     }
 
     /**
-     * Get int.
+     * Get value from cache.
      *
      * @param key the key
      * @return the int
@@ -76,6 +73,9 @@ class LRUCache {
         map.put(key, node);
         insertNodeInLRU(node);
     }
+    /**
+    * Delete specific node from list
+    */
     private void deleteNode(int key) {
         DoublyLinkedListNode nodeToDelete = map.get(key);
         DoublyLinkedListNode next = nodeToDelete.next;
