@@ -41,8 +41,8 @@ public class Doctor {
     private final String city;
     private final double fees;
     private final String mobileNumber;
-    private Map<Date, List<Slot>> availableSlots = new HashMap<>();
-    private Map<Date, List<Slot>> bookedSlots = new HashMap<>();
+    private final Map<Date, List<Slot>> availableSlots = new HashMap<>();
+    private final Map<Date, List<Slot>> bookedSlots = new HashMap<>();
 
     public Doctor(String name, String address, String mobileNumber, Speciality speciality, String city, double fees) {
         this.id = Environment.doctorId++;
@@ -53,29 +53,34 @@ public class Doctor {
         this.city = city;
         this.fees = fees;
     }
-    public synchronized void bookAppointment(Slot slot, Date dateOfAppointment) {
+
+    public synchronized boolean bookAppointment(Slot slot, Date dateOfAppointment) {
         List<Slot> unavailableSlots = bookedSlots.getOrDefault(dateOfAppointment, new ArrayList<>());
         List<Slot> freeSlots = availableSlots.getOrDefault(dateOfAppointment, new ArrayList<>());
 
         if (!freeSlots.contains(slot) || unavailableSlots.contains(slot)) {
             System.out.println("Slot not available for the time, please try a different slot");
-            return;
+            return false;
         }
         freeSlots.remove(slot);
         unavailableSlots.add(slot);
         bookedSlots.put(dateOfAppointment, freeSlots);
         availableSlots.put(dateOfAppointment, unavailableSlots);
         System.out.println("Appointment successfully booked for provided slot");
+        return true;
     }
+
     public void getAvailableSlotsForTheDay(Date dateOfAppointment) {
         System.out.println("Available Slots: ");
-        for (Slot slot: availableSlots.getOrDefault(dateOfAppointment, new ArrayList<>())) {
+        for (Slot slot : availableSlots.getOrDefault(dateOfAppointment, new ArrayList<>())) {
             System.out.println(slot.toString());
         }
     }
+
     public boolean checkIfFreeSlotAvailableOnDate(Date date) {
         return this.availableSlots.containsKey(date) && this.availableSlots.get(date).size() > 0;
     }
+
     public void addSlotsForDate(Date date, int duration, LocalDateTime startTime, LocalDateTime endTime, double fees) {
         if (availableSlots.containsKey(date) || bookedSlots.containsKey(date)) {
             System.out.println("Cannot modify slots once created");
